@@ -1,7 +1,7 @@
 <!-- GFM-TOC -->
 * [1. 最长回文子串](#1-字符串循环移位包含)
 * [2. 最长回文子序列](#2-最长回文子序列)
-
+* [3. 正则表达式匹配](#3-正则表达式匹配)
 <!-- GFM-TOC -->
 
 # 1. 最长回文子串
@@ -68,3 +68,61 @@ public:
         }
 ```
 
+# 3. 正则表达式匹配
+这道题与牛客网《剑指offer》上的52题十分的相似，我的解题思路也是按照牛客网上的来的：
+    递归，分解：字符的后边是否跟有'*', 如有，则分为'*'匹配0个，1个或者是多个。如没有，直接匹配str和pattern的下一个字符。
+```cpp
+  class Solution {
+  public:
+      bool isMatch(string s, string p) {
+          int lenS = s.size();
+          int lenP = p.size();
+          if(lenS == 0 && lenP == 0) {
+              return true;
+          }
+          if(lenS != 0 && lenP == 0) {
+              return false;
+          }
+          if(p[1] != '*') {
+              if(s[0] == p[0] || (p[0] == '.' && lenS != 0)) {
+                  return isMatch(s.substr(1, lenS - 1), p.substr(1, lenP - 1));
+              }
+              else {
+                  return false;
+              }
+          }
+          else {
+              if(s[0] == p[0] || (p[0] == '.' && lenS != 0)) {
+                  return isMatch(s, p.substr(2, lenP - 2)) || isMatch(s.substr(1,lenS - 1), p);
+              }
+              else {
+                  return isMatch(s, p.substr(2,lenP - 2));
+              }
+          }
+          return false;
+      }
+  };
+```
+但是该算法的时间复杂度和内存开销比较大，以下是对该算法的一个改进。改进对极大的降低了内存的开销。
+其中：c_str()函数是获取字符串的首指针；auto：变量的自动类型推断。
+```cpp
+  class Solution {
+  public:
+      bool isMatch(string s, string p) {
+          return isMatch(s.c_str(), p.c_str());
+      }
+
+      bool isMatch(const char* s, const char* p) {
+          if(*p == 0) return *s == 0;
+
+          auto first_match = *s && (*s == *p || *p == '.');
+
+          if(*(p+1) == '*'){
+              return isMatch(s, p+2) || (first_match && isMatch(++s, p));
+          }
+          else{
+              return first_match && isMatch(++s, ++p);
+          }
+      }
+  };
+```
