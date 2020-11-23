@@ -1,0 +1,86 @@
+错误：
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> result;
+        sort(nums.begin(), nums.end());
+        int length = nums.size();
+        int a = nums[0],b = nums[1],c = nums[2];
+        for(int i = 0; i < length - 2; i++) {
+            if(i > 0) {
+                if(nums[i] == a) {
+                    continue;
+                }
+            }
+            a = nums[i];
+            for (int j = i + 1; j < length - 1; j++) {
+                if(j > 1) {
+                    if(nums[j] == b) {
+                        break;
+                    }
+                }
+                b = nums[j];
+                for(int k = j + 1; k < length; k++) {
+                    if(k > 2) {
+                        if(nums[k] == c) {
+                            continue;
+                        }
+                    }
+                    if(nums[k] == -(a + b)) {
+                        vector<int> ele;
+                        ele.push_back(a);
+                        ele.push_back(b);
+                        ele.push_back(nums[k]);
+                        result.push_back(ele);
+                    }
+                    if(nums[k] > -(a + b)) {
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+};
+
+正确题解：
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> res;
+        sort(nums.begin(), nums.end());
+        int length = nums.size();
+        if(length == 0) {
+            return res;
+        }
+        if(nums[0] <= 0 && nums[length - 1] >= 0) {
+            for(int i = 0; i < length - 2;) {
+                if(nums[i] > 0) {
+                    break;
+                }
+                int first = i + 1, last = length - 1;
+                do {
+                    if(first >= last || (nums[i] > 0 && nums[last] > 0) || (nums[i] < 0 && nums[last] < 0)) {
+                        break;
+                    }
+                    int result = nums[i] + nums[first] + nums[last];
+                    if(result == 0) {
+                        vector<int> ele;
+                        ele.push_back(nums[i]);
+                        ele.push_back(nums[first]);
+                        ele.push_back(nums[last]);
+                        res.push_back(ele);
+                    }
+                    if(result < 0) {
+                        while(first < length - 1 && first < last && nums[first] == nums[++first]) {}
+                    }
+                    else {
+                        while(last > 0 && first < last && nums[last] == nums[--last]) {}
+                    }
+                } while(first < last);
+                while(i < length - 2 && nums[i] == nums[++i]) {}
+            }
+        }
+        return res;
+    }
+};
