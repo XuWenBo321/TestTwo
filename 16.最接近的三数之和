@@ -5,7 +5,8 @@
 <!-- GTM-TOC -->
 
 
-错解：
+# 错解：
+
 ```cpp
 class Solution {
 public:
@@ -56,7 +57,7 @@ public:
 };
 ```
 
-正解：
+# 正解：
 
 ```cpp
 class Solution {
