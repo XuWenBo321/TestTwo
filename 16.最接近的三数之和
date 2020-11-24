@@ -1,0 +1,80 @@
+错解：
+```
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        int len = nums.size();
+        sort(nums.begin(),nums.end());
+        int res_1 = nums[0] + nums[1] + nums[2];
+        if(nums[0] > target || nums[len - 1] < target) {
+            return 0;
+        }
+        for(int i = 0;i < len - 2; ) {
+            if(nums[i] > target) {
+                return res_1;
+            } 
+            int first = i + 1, last = len - 1;
+            do {
+                int tmp = nums[i] + nums[first] + nums[last];
+                if(first >= last || tmp > target) {
+                    break;
+                }
+                if(tmp == target) {
+                    return target;
+                }
+                if(tmp < target) {
+                    if(abs(nums[i] + nums[first] + nums[last] - target) < abs(res_1 - target)) {
+                        res_1 = nums[i] + nums[first] + nums[last];
+                    }
+                    while(first < last && nums[first] == nums[++first]){}
+                    if(abs(nums[i] + nums[first] + nums[last] - target) < abs(res_1 - target)) {
+                        res_1 = nums[i] + nums[first] + nums[last];
+                    }                      
+
+                }
+                if(tmp > target) {
+                    if(abs(nums[i] + nums[first] + nums[last] - target) < abs(res_1 - target)) {
+                        res_1 = nums[i] + nums[first] + nums[last];
+                    }
+                    while(last > 0 && first < last && nums[last] == nums[--last]){}
+                    if(abs(nums[i] + nums[first] + nums[last] - target) < abs(res_1 - target)) {
+                        res_1 = nums[i] + nums[first] + nums[last];
+                    }                      
+                }
+            }while(first < last);
+            while(i < len - 2 && nums[i] == nums[++i]) {}            
+        }
+        return res_1;
+    }
+};
+```
+正解：
+```
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+       sort(nums.begin(), nums.end());
+       int res = nums[0] + nums[1] + nums[2];
+       int len = nums.size();
+       for(int i = 0; i < len; i++) {
+           int first = i + 1, last = len - 1;
+           while(first < last) {
+               int tmp = nums[i] + nums[first] + nums[last];
+               if(abs(tmp - target) < abs(res - target)) {
+                   res = tmp;
+               }
+               if(tmp < target) {
+                   first++;
+               }
+               else if(tmp > target) {
+                   last--;
+               }
+               else {
+                   return target;
+               }
+           }
+       }
+       return res;
+    }
+};
+```
