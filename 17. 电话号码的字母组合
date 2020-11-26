@@ -1,0 +1,40 @@
+# 错误代码：
+```cpp
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> ans;
+        int len = digits.length();
+        queue<string> res;
+        if(len == 0) {
+            return ans;
+        }
+       string dict[] = {"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+       int firstNumber = digits[0] - '0';
+       string firStr = dict[firstNumber];
+       string tmp;
+       for(int i = 0; i < dict[firstNumber].length();i++) {
+           tmp = firStr[i];
+           res.push(tmp);
+       }
+       for(int i = 1; i < len; i++) {
+           int number = digits[i] - '0';
+           int lenE = dict[number].length();
+           int sizeQue = res.size();
+           for(int j = 0; j < sizeQue; j++) {
+               string queFront = res.front();
+               res.pop();
+               for(int k = 0; k < lenE; k++) {
+                   string add = queFront + dict[number][k];
+                   res.push(add);
+               }
+           }
+       }
+       for(int i = 0; i < res.size();i++) {
+           ans.push_back(res.front());
+           res.pop();
+       }
+    return ans;
+    }
+};
+```
